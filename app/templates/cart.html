@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Кошик</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div th:replace="~{header :: header}"></div>
+
+<div class="container mt-4">
+    <h2>Кошик</h2>
+    <div th:if="${cart == null or #lists.isEmpty(cart)}">
+        <p>Ваш кошик порожній 🛒</p>
+    </div>
+    <div th:if="${cart != null and !#lists.isEmpty(cart)}">
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th>№</th>
+                <th>Назва</th>
+                <th>Виробник</th>
+                <th>Країна</th>
+                <th>Колір</th>
+                <th>Ціна за одиницю</th>
+                <th>Кількість</th>
+                <th>Сума</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="item, stat : ${cart}">
+                <td th:text="${stat.index + 1}"></td>
+                <td th:text="${item.product.name}"></td>
+                <td th:text="${item.product.manufacturer}"></td>
+                <td th:text="${item.product.country}"></td>
+                <td th:text="${item.product.color}"></td>
+                <td th:text="${item.product.price}"></td>
+                <td>
+                    <form th:action="@{'/cart/decrease/' + ${item.product.id}}" method="post" style="display:inline;">
+                        <button class="btn btn-danger btn-sm">-</button>
+                    </form>
+                    <span th:text="${item.quantity}"></span>
+                    <form th:action="@{'/cart/add/' + ${item.product.id}}" method="post" style="display:inline;">
+                        <button class="btn btn-success btn-sm">+</button>
+                    </form>
+                </td>
+                <td th:text="${item.product.price * item.quantity}"></td>
+            </tr>
+            </tbody>
+        </table>
+
+        <p><b>Загальна вартість:</b> <span th:text="${total}"></span> грн</p>
+        <p><b>Загальна кількість товарів:</b> <span th:text="${count}"></span></p>
+        <form th:action="@{/userinfo}" method="get">
+            <button type="submit" class="btn btn-success">Оформити замовлення</button>
+        </form>
+    </div>
+</div>
+</body>
+</html>
