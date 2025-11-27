@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Реєстрація</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background-color: #f4f4f9;
+        }
+        .register-card {
+            max-width: 450px;
+            margin: 80px auto;
+            padding: 30px;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        .register-card h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #28a745;
+        }
+        .text-danger {
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+
+{% include 'header.html' %}
+
+<div class="register-card">
+    <h2>Форма реєстрації</h2>
+
+    <form action="/register" method="post">
+
+        <div class="mb-3">
+            <label class="form-label">Ім’я користувача</label>
+            <input type="text" class="form-control" name="username"
+                   placeholder="Введіть логін"
+                   value="{{ form_user.username if form_user else '' }}">
+            {% if errors and errors.username %}
+                <div class="text-danger">{{ errors.username }}</div>
+            {% endif %}
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Email</label>
+            <input type="email" class="form-control" name="email"
+                   placeholder="Введіть email"
+                   value="{{ form_user.email if form_user else '' }}">
+            {% if errors and errors.email %}
+                <div class="text-danger">{{ errors.email }}</div>
+            {% endif %}
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Пароль</label>
+            <input type="password" class="form-control" name="password"
+                   id="password" placeholder="Введіть пароль">
+            {% if errors and errors.password %}
+                <div class="text-danger">{{ errors.password }}</div>
+            {% endif %}
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Повторіть пароль</label>
+            <input type="password" class="form-control" name="confirm_password"
+                   id="confirm_password" placeholder="Повторіть пароль">
+            {% if errors and errors.confirm_password %}
+                <div class="text-danger">{{ errors.confirm_password }}</div>
+            {% endif %}
+        </div>
+
+        <div class="form-check">
+            <input type="checkbox" class="form-check-input"
+                   onclick="togglePasswordVisibility()">
+            <label class="form-check-label">Показати пароль</label>
+        </div>
+
+        <div class="form-check mt-2">
+            <input type="checkbox" class="form-check-input" name="notify"
+                   {% if form_user and form_user.notify %}checked{% endif %}>
+            <label class="form-check-label">Отримувати сповіщення</label>
+        </div>
+
+        <button type="submit" class="btn btn-success mt-3">Зареєструватися</button>
+    </form>
+</div>
+
+<script>
+    function togglePasswordVisibility() {
+        const pwd = document.getElementById("password");
+        const confirm = document.getElementById("confirm_password");
+        const show = pwd.type === "password";
+        pwd.type = show ? "text" : "password";
+        confirm.type = show ? "text" : "password";
+    }
+</script>
+
+</body>
+</html>

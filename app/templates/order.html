@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Оформлення замовлення</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        .order-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: calc(100vh - 70px);
+        }
+
+        .order-box {
+            background: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            width: 350px;
+        }
+
+        .order-box h2 {
+            margin-bottom: 20px;
+            color: #28a745;
+        }
+
+        .order-box input {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .order-box button {
+            width: 100%;
+            padding: 12px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .order-box button:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+
+{% include 'header.html' %}
+
+<div class="order-container">
+    <div class="order-box">
+        <h2>Оформлення замовлення</h2>
+        <form action="/submitOrder" method="post">
+            <input type="text" name="address" placeholder="Адреса доставки" required>
+            <input type="text" name="credit_card" placeholder="Номер кредитної картки" required>
+            <button type="submit">Оформити замовлення</button>
+        </form>
+    </div>
+</div>
+
+</body>
+</html>

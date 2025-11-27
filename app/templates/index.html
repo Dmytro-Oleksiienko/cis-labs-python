@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Магазин Олексієнка</title>
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css"
+          rel="stylesheet">
+    <style>
+        .product-card {
+            transition: transform 0.2s;
+            display: flex;
+            flex-direction: column;
+            height: auto;
+        }
+        .product-card:hover {
+            transform: scale(1.03);
+        }
+        .card img {
+            height: 140px;
+            object-fit: contain;
+            max-width: 100%;
+        }
+
+        .card {
+            overflow: hidden;
+            border-radius: 12px;
+        }
+
+        @media (max-width: 576px) {
+            .card img {
+                height: 110px;
+            }
+        }
+        .price {
+            font-size: 1rem;
+            color: #6c757d;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+{% include 'header.html' %}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-end mt-3">
+        <button type="button"
+                class="btn btn-outline-success"
+                data-bs-toggle="modal"
+                data-bs-target="#filterModal">
+            <i class="bi bi-funnel"></i> Фільтри
+        </button>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <h2 class="mb-4">Список товарів</h2>
+            <div class="row">
+                {% for product in products %}
+                <div class="col-md-3">
+                    <div class="card mb-4 shadow-sm product-card">
+                        <img src="{{ product.image_url }}"
+                             class="bd-placeholder-img card-img-top"
+                             alt="Фото товару">
+                        <div class="card-body">
+                            <h5>{{ product.name }}</h5>
+                            <p>Виробник: <span>{{ product.manufacturer }}</span></p>
+                            <p>Країна: <span>{{ product.country }}</span></p>
+                            <p>Колір: <span>{{ product.color }}</span></p>
+                            <p>Ціна: <span>{{ product.price }}</span> грн</p>
+
+                            <form action="/cart/add/{{ product.id }}"
+                                  method="post"
+                                  class="add-to-cart-form"
+                                  data-id="{{ product.id }}">
+                                <button type="submit" class="btn btn-success">Купити</button>
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальне вікно фільтрів -->
+    <div class="modal fade" id="filterModal" tabindex="-1"
+         aria-labelledby="filterModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form method="get" action="/products">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="filterModalLabel">Фільтрація товарів</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                aria-label="Закрити"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="priceRange" class="form-label">Діапазон цін</label>
+                            <select id="priceRange" name="priceRange" class="form-select">
+                                <option value="" {% if not priceRange %}selected{% endif %}>Будь-яка</option>
+                                <option value="0-1000" {% if priceRange == '0-1000' %}selected{% endif %}>0 – 1 000 ₴</option>
+                                <option value="1000-5000" {% if priceRange == '1000-5000' %}selected{% endif %}>1 000 – 5 000 ₴</option>
+                                <option value="5000-20000" {% if priceRange == '5000-20000' %}selected{% endif %}>5 000 – 20 000 ₴</option>
+                                <option value="20000-100000" {% if priceRange == '20000-100000' %}selected{% endif %}>20 000 – 100 000 ₴</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="country" class="form-label">Країна</label>
+                            <select id="country" name="country" class="form-select">
+                                <option value="" {% if not country %}selected{% endif %}>Будь-яка</option>
+                                <option value="Korea" {% if country == 'Korea' %}selected{% endif %}>Корея</option>
+                                <option value="USA" {% if country == 'USA' %}selected{% endif %}>США</option>
+                                <option value="China" {% if country == 'China' %}selected{% endif %}>Китай</option>
+                                <option value="Japan" {% if country == 'Japan' %}selected{% endif %}>Японія</option>
+                                <option value="Swiss" {% if country == 'Swiss' %}selected{% endif %}>Швейцарія</option>
+                                <option value="Netherlands" {% if country == 'Netherlands' %}selected{% endif %}>Нідерланди</option>
+                                <option value="UK" {% if country == 'UK' %}selected{% endif %}>Велика Британія</option>
+                                <option value="Ukraine" {% if country == 'Ukraine' %}selected{% endif %}>Україна</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="manufacturer" class="form-label">Виробник</label>
+                            <select id="manufacturer" name="manufacturer" class="form-select">
+                                <option value="" {% if not manufacturer %}selected{% endif %}>Будь-який</option>
+                                <option value="Samsung" {% if manufacturer == 'Samsung' %}selected{% endif %}>Samsung</option>
+                                <option value="Apple" {% if manufacturer == 'Apple' %}selected{% endif %}>Apple</option>
+                                <option value="Lenovo" {% if manufacturer == 'Lenovo' %}selected{% endif %}>Lenovo</option>
+                                <option value="Sony" {% if manufacturer == 'Sony' %}selected{% endif %}>Sony</option>
+                                <option value="Dell" {% if manufacturer == 'Dell' %}selected{% endif %}>Dell</option>
+                                <option value="Jbl" {% if manufacturer == 'Jbl' %}selected{% endif %}>Jbl</option>
+                                <option value="LG" {% if manufacturer == 'LG' %}selected{% endif %}>LG</option>
+                                <option value="HP" {% if manufacturer == 'HP' %}selected{% endif %}>HP</option>
+                                <option value="Logitech" {% if manufacturer == 'Logitech' %}selected{% endif %}>Logitech</option>
+                                <option value="GoPro" {% if manufacturer == 'GoPro' %}selected{% endif %}>GoPro</option>
+                                <option value="Wacom" {% if manufacturer == 'Wacom' %}selected{% endif %}>Wacom</option>
+                                <option value="Philips" {% if manufacturer == 'Philips' %}selected{% endif %}>Philips</option>
+                                <option value="Marshall" {% if manufacturer == 'Marshall' %}selected{% endif %}>Marshall</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <a class="btn btn-outline-secondary" href="/products">Скинути</a>
+                        <button type="submit" class="btn btn-success">Застосувати</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<a href="/cart"
+   class="btn btn-success rounded-circle position-fixed bottom-0 end-0 m-4
+          d-flex align-items-center justify-content-center position-relative"
+   style="width:60px; height:60px;">
+    <i class="bi bi-cart-fill fs-4 text-white"></i>
+    <span id="cart-count"
+          class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+        {{ cart_count|default(0) }}
+    </span>
+</a>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    // Додаємо товар у кошик без перезавантаження сторінки
+    document.querySelectorAll(".add-to-cart-form").forEach(form => {
+        form.addEventListener("submit", function (e) {
+            e.preventDefault();
+            const productId = this.getAttribute("data-id");
+
+            fetch(`/cart/add/${productId}`, {
+                method: "POST"
+            }).then(res => {
+                if (res.ok) {
+                    const countSpan = document.getElementById("cart-count");
+                    let current = parseInt(countSpan.textContent) || 0;
+                    countSpan.textContent = current + 1;
+                } else {
+                    alert("Сталася помилка при додаванні товару ❌");
+                }
+            }).catch(() => {
+                alert("Помилка з’єднання ❌");
+            });
+        });
+    });
+</script>
+</body>
+</html>

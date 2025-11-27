@@ -1,0 +1,29 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    depends_on:
+      - rabbitmq
+      - bonus-service
+    environment:
+      BONUS_SERVICE_URL: "http://bonus-service:8001"
+      RABBITMQ_HOST: "rabbitmq"
+
+  bonus-service:
+    build:
+      context: .
+      dockerfile: Dockerfile.bonus
+    ports:
+      - "8001:8001"
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
